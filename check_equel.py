@@ -48,10 +48,14 @@ def check_torsque_equal(all_the_force, all_the_force_continued, all_the_torque):
         bool: 如果转动惯量平衡，则返回True；否则返回False。
 
     """
-    c = "转动惯量不平衡"
+    a = " 法向转动惯量不平衡 "
+    b = " 轴向转动惯量不平衡 "
+    c = ""
 
     torque_left = 0
     torque_right = 0
+    torque_up = 0
+    torque_down = 0
     for force in all_the_force:
         if force.direction == 1:
             torque_ni += force.size * force.place
@@ -59,11 +63,14 @@ def check_torsque_equal(all_the_force, all_the_force_continued, all_the_torque):
             torque_shun += force.size * force.place
     for torque in all_the_torque:
         if torque.direction == 1:
-            torque_left += torque.size
-        elif torque.direction == -1:
             torque_right += torque.size
+        elif torque.direction == -1:
+            torque_left += torque.size
+        elif torque.direction == 2:
+            torque_up += torque.size
+        elif torque.direction == -2:
+            torque_down += torque.size
     for force in all_the_force_continued:
-
         if force.direction == 1:
             torque_ni += force.size * ((force.place_end**2 - force.place_start**2) / 2)
         elif force.direction == 2:
@@ -71,8 +78,11 @@ def check_torsque_equal(all_the_force, all_the_force_continued, all_the_torque):
                 (force.place_end**2 - force.place_start**2) / 2
             )
 
+    if abs(torque_up - torque_down) > 0.001:
+        c = c + b
     if abs(torque_left - torque_right) > 0.001:
         c = c + a
+
     if c != "":
         print(c)
         return False

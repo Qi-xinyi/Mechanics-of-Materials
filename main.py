@@ -4,8 +4,10 @@ from check_equel import *
 from Torque import *
 from σ import *
 from τ import *
+from torsion import *
 
-section = input("请输入截面类型：(HC空心圆柱,other其他)")
+section = input("请输入截面类型：(HC空心圆柱,other其他)")  # 获取用户输入的截面类型
+
 if section == "HC":
     De = float(input("请输入圆环的外径："))
     Di = float(input("请输入圆环的内径："))
@@ -24,7 +26,7 @@ elif section == "other":
     G = float(input("请输入材料的剪切模量："))
     I_p = float(input("请输入截面的极惯性矩："))
     W_t = float(input("请输入截面的抗扭截面模量："))
-    sectio1 = other(A, E, G, I_z, W_t, I_p)
+    sectio1 = other(A, E, G, I_z, W_t, I_p)  # 创建其他类型截面对象
 
 length = float(input("请输入杆件的长度："))  # 后期将这些特征与pole类的属性联系起来
 maximum_shear_stress = float(input("请输入最大剪应力"))
@@ -133,17 +135,23 @@ while a2 == "y":
     print("你想干什么")
     print("1.检查力平衡")
     print("2.检查力矩平衡")
-    print("3.计算正应力")
+    print("3.计算正应力（中心）")
     print("4.画出轴力图")
-    print("5.画出正应力图")
+    print("5.画出正应力图（中心）")
     print("6.计算切应力")
+    print("7.计算弯力")
+    print("8.计算弯矩")
+    print("9.画弯力图")
+    print("10.画弯矩图")
+    print("11.计算扭矩")
+    print("12.画出扭矩图")
 
-    choice = input("请输入你的选择：")
+    choice = int(input("请输入你的选择："))
     if choice == "1":
         check_force_equal(all_the_force, all_the_force_continued)
 
     elif choice == "2":
-        pass
+        check_torsque_equal(all_the_force, all_the_force_continued, all_the_torque)
 
     elif choice == "3":
         x = float(input("请输入计算点的位置："))
@@ -160,6 +168,27 @@ while a2 == "y":
     elif choice == "6":
         x = float(input("请输入计算点的位置："))
         shear_stress(all_the_force, x, section1.A, maximum_shear_stress)
+
+    elif choice == "7":
+        x = float(input("请输入计算点的位置："))
+        cacular_force_s(all_the_force, all_the_force_continued, x)
+
+    elif choice == "8":
+        x = float(input("请输入计算点的位置："))
+        torque_s(x, all_the_force, all_the_force_continued, all_the_torque)
+
+    elif choice == "9":
+        paint_force_s(all_the_force, all_the_force_continued, length)
+
+    elif choice == "10":
+        paint_torque_s(all_the_torque, length)
+
+    elif choice == "11":
+        x = float(input("请输入计算点的位置："))
+        calcular_torsion(all_the_torque, x)
+
+    elif choice == "12":
+        paint_torsion(all_the_torque, length)
 
     else:
         print("功能未开发")

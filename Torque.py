@@ -3,7 +3,7 @@ class torque:
         self.long = long
         self.place = place
         self.size = size
-        self.orientation = direction  # 逆时针为1，逆时针为-1
+        self.orientation = direction  # 逆时针为1，逆时针为-1，向上为2，向下为-2
 
     def check(self):
         if self.place > self.long or self.place < 0:
