@@ -6,7 +6,15 @@ from σ import *
 from τ import *
 from torsion import *
 
-section = input("请输入截面类型：(HC空心圆柱,other其他)")  # 获取用户输入的截面类型
+section = input(
+    "请输入截面类型：(HC空心圆柱\nH工型钢\nC圆柱\nother其他)"
+)  # 获取用户输入的截面类型
+
+if section == "H":
+    num = float(input("请输入工型钢的编号"))
+    E = float(input("请输入材料的弹性模量："))
+    G = float(input("请输入材料的剪切模量："))
+    section1 = H(num, E, G)
 
 if section == "HC":
     De = float(input("请输入圆环的外径："))

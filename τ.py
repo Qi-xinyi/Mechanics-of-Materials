@@ -1,4 +1,4 @@
-def shear_stress(all_the_force, all_the_force_contitued, x, A):
+def shear_stress(all_the_force, all_the_force_contitued, x, A，a=1):
     """
     计算指定截面位置x处的剪应力。
 
@@ -65,5 +65,6 @@ def shear_stress(all_the_force, all_the_force_contitued, x, A):
     # 计算剪应力
     τ = force_add / A
     # 打印剪应力结果
-    print(f"截面上{x}处的剪应力为{τ}")
+    if a == 1:
+        print(f"截面上{x}处的剪应力为{τ}")
     return τ

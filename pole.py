@@ -1,4 +1,5 @@
 from math import *
+import pandas as pd
 
 
 class section:
@@ -83,6 +84,18 @@ class pole(section):
 """
 
 
+class H(section):
+    def __init__(self, num, E, G):
+        # 调用父类section的构造函数
+        section.__init__(self, E, G)
+        df = pd.read_csv("D:\\材料力学\\程序\\H型钢.csv")
+        self.I_x = float(df.loc[num, "I_x"])
+        self.I_y = float(df.loc[num, "I_y"])
+        self.W_x = float(df.loc[num, "W_x"])
+        self.W_y = float(df.loc[num, "W_y"])
+        self.A = float(df.loc[num, "A"])
+
+
 class C(section):
     def __init__(self, D, E, G):
         # 调用父类section的构造函数
@@ -93,3 +106,18 @@ class C(section):
         self.W_t = pi * D**3 / 16
         self.D = D
         self.A = pi * D**2 / 4
+
+
+class Q(section):
+    def __init__(self, b, h, E, G):
+        # 调用父类section的构造函数
+        section.__init__(self, E, G)
+        self.A = b * h
+        self.I_z = b * h**3 / 12
+
+
+class TC(section):  # Thin-walled cylinders
+    def __init__(self, D, t, E, G):
+        # 调用父类section的构造函数
+        section.__init__(self, E, G)
+        self.I_p = 2 * pi * D**3 * t / 8
