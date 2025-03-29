@@ -1,7 +1,0 @@
-type,position,position_start,position_end,size,direction
-force,5,,,100,3
-force,95,,,150,4
-force_continued,,0,10,1,1
-force_continued,,80,90,5,2
-torque,100,,,0,1
-torque,20,,,0,-1
