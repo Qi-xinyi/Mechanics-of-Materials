@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def calcular_torsion(all_the_torique, x):
@@ -40,8 +41,8 @@ def paint_torsion(all_the_torique, length):
         无
 
     """
-    step = max(1, int(length / 1000))
-    x_values = range(0, int(length), step)
+    step = length / 1000
+    x_values = np.arange(0, length, step)
     y_values = [calcular_torsion(all_the_torique, place) for place in x_values]
 
     # 绘制函数图

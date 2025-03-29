@@ -60,13 +60,13 @@ def check_torsque_equal(all_the_force, all_the_force_continued, all_the_torque):
 
     """
     # 定义错误信息的字符串
-    a = " 法向转动惯量不平衡 "
-    b = " 轴向转动惯量不平衡 "
+    a = " 法向扭矩不平衡 "
+    b = " 轴向扭矩不平衡 "
     c = ""
 
     # 初始化扭矩变量
-    torque_left = 0
-    torque_right = 0
+    torque_ni = 0
+    torque_shun = 0
     torque_up = 0
     torque_down = 0
 
@@ -83,10 +83,10 @@ def check_torsque_equal(all_the_force, all_the_force_continued, all_the_torque):
     for torque in all_the_torque:
         if torque.direction == 1:
             # 计算右向轴向扭矩
-            torque_right += torque.size
+            torque_ni += torque.size
         elif torque.direction == -1:
             # 计算左向轴向扭矩
-            torque_left += torque.size
+            torque_shun += torque.size
         elif torque.direction == 2:
             # 计算上向轴向扭矩
             torque_up += torque.size
@@ -110,7 +110,7 @@ def check_torsque_equal(all_the_force, all_the_force_continued, all_the_torque):
         c = c + b
 
     # 判断法向转动惯量是否平衡
-    if abs(torque_left - torque_right) > 0.001:
+    if abs(torque_shun - torque_ni) > 0.001:
         c = c + a
 
     # 输出结果并返回是否平衡

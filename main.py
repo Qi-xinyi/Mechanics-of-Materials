@@ -7,7 +7,7 @@ from τ import *
 from torsion import *
 
 section = input(
-    "请输入截面类型：(HC空心圆柱\nH工型钢\nC圆柱\nother其他)"
+    "请输入截面类型:\nHC空心圆柱\nH工型钢\nC圆柱\nother其他\n"
 )  # 获取用户输入的截面类型
 
 if section == "H":
@@ -36,6 +36,12 @@ elif section == "other":
     W_t = float(input("请输入截面的抗扭截面模量："))
     sectio1 = other(A, E, G, I_z, W_t, I_p)  # 创建其他类型截面对象
 
+elif section == "C":
+    D = float(input("请输入圆柱的直径："))
+    E = float(input("请输入材料的弹性模量："))
+    G = float(input("请输入材料的剪切模量："))
+    section1 = C(D, E, G)
+
 length = float(input("请输入杆件的长度："))  # 后期将这些特征与pole类的属性联系起来
 maximum_shear_stress = float(input("请输入最大剪应力"))
 Maximum_normal_stress = float(input("请输入最大正应力"))
@@ -52,7 +58,7 @@ if a3 == "y":
     # direction: 力的方向或力矩的方向
 
     # 读取CSV文件
-    df = pd.read_csv("D:\\材料力学\\程序\\luoyining.csv")
+    df = pd.read_csv("D:\\材料力学\\程序\\qixinyi.csv")
 
     all_the_force = []
     all_the_force_continued = []
@@ -84,7 +90,6 @@ if a3 == "y":
         place = row["position"]
         size = row["size"]
         direction = row["direction"]
-
         torque1 = torque(length, place, size, direction)
         if torque1.check() == False:
             print(f"在索引{index}处的力矩作用位置超出杆件长度，已跳过")
@@ -137,7 +142,7 @@ else:
 import os
 
 a2 = "y"
-while a2 == "y":
+while a2 != "n":
     os.system("cls" if os.name == "nt" else "clear")
 
     print("你想干什么")
@@ -154,7 +159,8 @@ while a2 == "y":
     print("11.计算扭矩")
     print("12.画出扭矩图")
 
-    choice = int(input("请输入你的选择："))
+    choice = str(input("请输入你的选择："))
+
     if choice == "1":
         check_force_equal(all_the_force, all_the_force_continued)
 
@@ -189,7 +195,7 @@ while a2 == "y":
         paint_force_s(all_the_force, all_the_force_continued, length)
 
     elif choice == "10":
-        paint_torque_s(all_the_torque, length)
+        paint_torque_s(length, all_the_force, all_the_force_continued, all_the_torque)
 
     elif choice == "11":
         x = float(input("请输入计算点的位置："))

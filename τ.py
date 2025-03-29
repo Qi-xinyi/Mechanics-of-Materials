@@ -1,4 +1,4 @@
-def shear_stress(all_the_force, all_the_force_contitued, x, A，a=1):
+def shear_stress(all_the_force, all_the_force_contitued, x, a=1):
     """
     计算指定截面位置x处的剪应力。
 

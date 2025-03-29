@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class force:
@@ -43,6 +44,8 @@ def cacular_force_s(all_the_force, all_the_force_continued, s, a=1):
     Returns:
         float: 位置s处的合力大小
     """
+    force_up = 0
+    force_down = 0
     for force1 in all_the_force:
         if force1.place < s:
             if force1.direction == "1":
@@ -50,11 +53,11 @@ def cacular_force_s(all_the_force, all_the_force_continued, s, a=1):
             elif force1.direction == "2":
                 force_down += force1.size
     for force1 in all_the_force_continued:
-        if force1.place_end < s:
+        if force1.place_end <= s:
             if force1.direction == "1":
                 force_up += force1.size * (force1.place_end - force1.place_start)
             elif force1.direction == "2":
-                force_down += force.size * (force1.place_end - force1.place_start)
+                force_down += force1.size * (force1.place_end - force1.place_start)
         elif force1.place_start < s and force1.place_end > s:
             if force1.direction == "1":
                 force_up += force1.size * (s - force1.place_start)
@@ -91,15 +94,18 @@ def torque_s(s, all_the_force, all_the_force_continued, all_the_torque, a=1):
         float: s位置处的扭矩。
 
     """
+    torque_up = 0
+    torque_down = 0
+
     for force1 in all_the_force:
-        if force1.place < s:
+        if force1.place <= s:
             if force1.direction == "1":
                 torque_up += force1.size * force1.place
             elif force1.direction == "2":
                 torque_down += force1.size * force1.place
 
     for force1 in all_the_force_continued:
-        if force1.place_end < s:
+        if force1.place_end <= s:
             if force1.direction == "1":
                 torque_up += (
                     force1.size * (force1.place_end**2 - force1.place_start**2) / 2
@@ -114,7 +120,7 @@ def torque_s(s, all_the_force, all_the_force_continued, all_the_torque, a=1):
                 torque_down += force1.size * (s**2 - force1.place_start**2) / 2
 
     for torque1 in all_the_torque:
-        if torque1.place < s:
+        if torque1.place <= s:
             if torque1.direction == "1":
                 torque_down += torque1.size
             elif torque1.direction == "-1":
@@ -139,8 +145,8 @@ def paint_force_s(all_the_force, all_the_force_continued, length):
 
     """
     # 生成数据点
-    step = max(1, int(length / 1000))
-    x_values = range(0, int(length), step)
+    step = length / 1000
+    x_values = np.arange(0, length, step)
     y_values = [
         cacular_force_s(all_the_force, all_the_force_continued, place, 0)
         for place in x_values
@@ -173,10 +179,10 @@ def paint_torque_s(length, all_the_force, all_the_force_continued, all_the_torqu
 
     """
     # 生成数据点
-    step = max(1, int(length / 1000))
-    x_values = range(0, int(length), step)
+    step = length / 1000
+    x_values = np.arange(0, length, step)
     y_values = [
-        cacular_force_s(all_the_force, all_the_force_continued, place, 0)
+        torque_s(place, all_the_force, all_the_force_continued, all_the_torque, 0)
         for place in x_values
     ]
 
