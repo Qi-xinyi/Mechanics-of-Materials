@@ -1,5 +1,7 @@
 南京理工大学中法工程师学院材料力学作业
 
+依赖第三方库：pandas,matplotlib,scipy,numpy
+
 qixinyi.csv编辑示意
 type,position,position_start,position_end,size,direction
 force,40,,,150,1    #作用于一个点的力
