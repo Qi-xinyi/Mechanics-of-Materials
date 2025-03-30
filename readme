@@ -2,6 +2,9 @@
 
 依赖第三方库：pandas,matplotlib,scipy,numpy
 
+不要使用coderunner
+千万不要，有莫名其妙的bug
+
 qixinyi.csv编辑示意
 type,position,position_start,position_end,size,direction
 force,40,,,150,1    #作用于一个点的力
