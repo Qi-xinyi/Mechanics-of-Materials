@@ -20,8 +20,9 @@ def calcular_torsion(all_the_torique, x):
         if torique1.place < x:
             if torique1.direction == 2:
                 torique_up += torique1.size
-            else:
+            elif torique1.direction == 1:
                 torique_down += torique1.size
+
     torsion = torique_up - torique_down
     return torsion
 
@@ -42,7 +43,7 @@ def paint_torsion(all_the_torique, length):
 
     """
     step = length / 1000
-    x_values = np.arange(0, length, step)
+    x_values = np.arange(0, length + step, step)
     y_values = [calcular_torsion(all_the_torique, place) for place in x_values]
 
     # 绘制函数图

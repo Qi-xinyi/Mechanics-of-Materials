@@ -1,1 +1,2 @@
-normal_stress
+
+        position = row["position"]

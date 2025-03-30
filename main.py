@@ -68,7 +68,7 @@ if a3 == "y":
     for index, row in df[df["type"] == "force"].iterrows():
         position = row["position"]
         size = row["size"]
-        direction = str(row["direction"])
+        direction = int(row["direction"])
 
         if pd.isnull(position):  # 如果位置为空，则处理为连续力
             place_start = float(row["position_start"])
@@ -89,7 +89,7 @@ if a3 == "y":
     for index, row in df[df["type"] == "torque"].iterrows():
         place = row["position"]
         size = row["size"]
-        direction = row["direction"]
+        direction = int(row["direction"])
         torque1 = torque(length, place, size, direction)
         if torque1.check() == False:
             print(f"在索引{index}处的力矩作用位置超出杆件长度，已跳过")
@@ -181,15 +181,18 @@ while a2 != "n":
 
     elif choice == "6":
         x = float(input("请输入计算点的位置："))
-        shear_stress(all_the_force, x, section1.A, maximum_shear_stress)
+        answer = shear_stress(all_the_force, x, section1.A, maximum_shear_stress)
+        print(f"在{x}处，该杆件的切应力为{answer}")
 
     elif choice == "7":
         x = float(input("请输入计算点的位置："))
-        cacular_force_s(all_the_force, all_the_force_continued, x)
+        answer = cacular_force_s(all_the_force, all_the_force_continued, x)
+        print(f"在{x}处，该杆件的弯力为{answer}")
 
     elif choice == "8":
         x = float(input("请输入计算点的位置："))
-        torque_s(x, all_the_force, all_the_force_continued, all_the_torque)
+        answer = torque_s(x, all_the_force, all_the_force_continued, all_the_torque)
+        print(f"在{x}处，该杆件的弯矩为{answer}")
 
     elif choice == "9":
         paint_force_s(all_the_force, all_the_force_continued, length)
@@ -199,7 +202,8 @@ while a2 != "n":
 
     elif choice == "11":
         x = float(input("请输入计算点的位置："))
-        calcular_torsion(all_the_torque, x)
+        answer = calcular_torsion(all_the_torque, x)
+        print(f"在{x}处，该杆件的扭矩为{answer}")
 
     elif choice == "12":
         paint_torsion(all_the_torque, length)

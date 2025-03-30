@@ -21,18 +21,18 @@ def check_force_equal(all_the_force, all_the_force_continued):
     force_left = 0
     force_right = 0
     for force in all_the_force_continued:
-        if force.direction == "1":
+        if force.direction == 1:
             force_up += force.size * (force.place_end - force.place_start)
-        elif force.direction == "2":
+        elif force.direction == 2:
             force_down += force.size * (force.place_end - force.place_start)
     for force in all_the_force:
-        if force.direction == "1":
+        if force.direction == 1:
             force_up += force.size
-        elif force.direction == "2":
+        elif force.direction == 2:
             force_down += force.size
-        elif force.direction == "3":
+        elif force.direction == 3:
             force_left += force.size
-        elif force.direction == "4":
+        elif force.direction == 4:
             force_right += force.size
     if abs(force_up - force_down) > 0.001:
         c = c + a
