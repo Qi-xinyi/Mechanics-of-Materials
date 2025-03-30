@@ -7,7 +7,7 @@ def calcular_torsion(all_the_torique, x):
     计算指定位置x的扭转力。
 
     Args:
-        all_the_torique (list): 包含所有扭转力的列表，每个元素为一个Torique对象。
+        all_the_torique (list): 包含所有扭距的列表，每个元素为一个Torique对象。
         x (float): 需要计算扭转力的位置。
 
     Returns:
@@ -33,17 +33,15 @@ def paint_torsion(all_the_torique, length):
 
     Args:
         all_the_torique (list): 包含扭矩值的列表。
-        length (float): 绘制的曲线长度，单位为米。
+        length (float):杆的长度，单位为米。
 
     Returns:
         None
 
-    Raises:
-        无
 
     """
     step = length / 1000
-    x_values = np.arange(0, length + step, step)
+    x_values = np.arange(0, length + 2 * step, step)
     y_values = [calcular_torsion(all_the_torique, place) for place in x_values]
 
     # 绘制函数图

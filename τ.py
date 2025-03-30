@@ -30,10 +30,10 @@ def shear_stress(all_the_force, all_the_force_contitued, x, a=1):
         # 如果力的位置小于x
         if force.place < x:
             # 如果力的方向为"1"（向上）
-            if force.direction == "1":
+            if force.direction == 1:
                 force_up += force.size
             # 如果力的方向为"2"（向下）
-            elif force.direction == "2":
+            elif force.direction == 2:
                 force_down += force.size
         else:
             # 如果力的位置不小于x，则跳过该循环
@@ -44,18 +44,18 @@ def shear_stress(all_the_force, all_the_force_contitued, x, a=1):
             # 如果力的结束位置小于x
             if force.place_end < x:
                 # 如果力的方向为"1"（向上）
-                if force.direction == "1":
+                if force.direction == 1:
                     force_up += force.size * (force.place_end - force.place_start)
                 # 如果力的方向为"2"（向下）
-                elif force.direction == "2":
+                elif force.direction == 2:
                     force_down += force.size * (force.place_end - force.place_start)
             # 如果力的开始位置小于x且结束位置大于x
             elif force.place_start < x and force.place_end > x:
                 # 如果力的方向为"1"（向上）
-                if force.direction == "1":
+                if force.direction == 1:
                     force_up += force.size * (x - force.place_start)
                 # 如果力的方向为"2"（向下）
-                elif force.direction == "2":
+                elif force.direction == 2:
                     force_down += force.size * (x - force.place_start)
             else:
                 # 如果力的开始位置不小于x，则跳过该循环

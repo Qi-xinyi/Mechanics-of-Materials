@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import *
 from scipy import integrate
+from force import cacular_force_s
 
 
 class torque:
@@ -46,28 +47,10 @@ def torque_s(s, all_the_force, all_the_force_continued, all_the_torque, a=1):
     torque_up = 0
     torque_down = 0
 
-    for force1 in all_the_force:
-        if force1.place <= s:
-            if force1.direction == 1:
-                torque_up += force1.size * force1.place
-            elif force1.direction == 2:
-                torque_down += force1.size * force1.place
+    def force_s_func(s):
+        return cacular_force_s(all_the_force, all_the_force_continued, s, 0)
 
-    for force1 in all_the_force_continued:
-        if force1.place_end <= s:
-            if force1.direction == 1:
-                torque_up += (
-                    force1.size * (force1.place_end**2 - force1.place_start**2) / 2
-                )
-            elif force1.direction == 2:
-                torque_down += (
-                    force1.size * (force1.place_end**2 - force1.place_start**2) / 2
-                )
-        elif force1.place_start < s and force1.place_end > s:
-            if force1.direction == 1:
-                torque_up += force1.size * (s**2 - force1.place_start**2) / 2
-            elif force1.direction == 2:
-                torque_down += force1.size * (s**2 - force1.place_start**2) / 2
+    torque_up, a = integrate.quad(force_s_func, 0, s)
 
     for torque1 in all_the_torque:
         if torque1.place <= s:
@@ -97,7 +80,7 @@ def paint_torque_s(length, all_the_force, all_the_force_continued, all_the_torqu
     """
     # 生成数据点
     step = length / 1000
-    x_values = np.arange(0, length + step, step)
+    x_values = np.arange(0, length + 2 * step, step)
     y_values = [
         torque_s(place, all_the_force, all_the_force_continued, all_the_torque, 0)
         for place in x_values

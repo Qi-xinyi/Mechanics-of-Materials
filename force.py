@@ -84,7 +84,7 @@ def paint_force_s(all_the_force, all_the_force_continued, length):
     """
     # 生成数据点
     step = length / 1000
-    x_values = np.arange(0, length + step, step)
+    x_values = np.arange(0, length + 2 * step, step)
     y_values = [
         cacular_force_s(all_the_force, all_the_force_continued, place, 0)
         for place in x_values

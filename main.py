@@ -1,57 +1,58 @@
-from pole import *
-from force import *
-from check_equel import *
-from Torque import *
-from σ import *
-from τ import *
-from torsion import *
+# 导入所需的模块
+from pole import *  # 导入截面相关的类和函数
+from force import *  # 导入力相关的类和函数
+from check_equel import *  # 导入平衡检查相关的函数
+from Torque import *  # 导入扭矩相关的类和函数
+from σ import *  # 导入正应力计算相关的函数
+from τ import *  # 导入切应力计算相关的函数
+from torsion import *  # 导入扭转相关的函数
 
 section = input(
     "请输入截面类型:\nHC空心圆柱\nH工型钢\nC圆柱\nother其他\n"
 )  # 获取用户输入的截面类型
 
-if section == "H":
-    num = float(input("请输入工型钢的编号"))
-    E = float(input("请输入材料的弹性模量："))
-    G = float(input("请输入材料的剪切模量："))
-    section1 = H(num, E, G)
+if section == "H":  # 如果选择工型钢截面
+    num = float(input("请输入工型钢的编号"))  # 获取工型钢编号
+    E = float(input("请输入材料的弹性模量："))  # 获取弹性模量
+    G = float(input("请输入材料的剪切模量："))  # 获取剪切模量
+    section1 = H(num, E, G)  # 创建工型钢截面对象
 
-if section == "HC":
-    De = float(input("请输入圆环的外径："))
-    Di = float(input("请输入圆环的内径："))
-    E = float(input("请输入材料的弹性模量："))
-    G = float(input("请输入材料的剪切模量："))
-    section1 = HC(De, Di, E, G)
+if section == "HC":  # 如果选择空心圆柱截面
+    De = float(input("请输入圆环的外径："))  # 获取圆环外径
+    Di = float(input("请输入圆环的内径："))  # 获取圆环内径
+    E = float(input("请输入材料的弹性模量："))  # 获取弹性模量
+    G = float(input("请输入材料的剪切模量："))  # 获取剪切模量
+    section1 = HC(De, Di, E, G)  # 创建空心圆柱截面对象
     print(f"圆环截面的惯性矩为：{section1.I_z}")
     print(f"圆环截面的极惯性矩为：{section1.I_p}")
     print(f"圆环截面的抗扭截面模量为：{section1.W_t}")
     print(f"圆环截面的面积为：{section1.A}")
 
-elif section == "other":
-    A = float(input("请输入截面的面积："))
-    I_z = float(input("请输入截面的惯性矩："))
-    E = float(input("请输入材料的弹性模量："))
-    G = float(input("请输入材料的剪切模量："))
-    I_p = float(input("请输入截面的极惯性矩："))
-    W_t = float(input("请输入截面的抗扭截面模量："))
+elif section == "other":  # 如果选择其他类型截面
+    A = float(input("请输入截面的面积："))  # 获取截面面积
+    I_z = float(input("请输入截面的惯性矩："))  # 获取惯性矩
+    E = float(input("请输入材料的弹性模量："))  # 获取弹性模量
+    G = float(input("请输入材料的剪切模量："))  # 获取剪切模量
+    I_p = float(input("请输入截面的极惯性矩："))  # 获取极惯性矩
+    W_t = float(input("请输入截面的抗扭截面模量："))  # 获取抗扭截面模量
     sectio1 = other(A, E, G, I_z, W_t, I_p)  # 创建其他类型截面对象
 
-elif section == "C":
-    D = float(input("请输入圆柱的直径："))
-    E = float(input("请输入材料的弹性模量："))
-    G = float(input("请输入材料的剪切模量："))
-    section1 = C(D, E, G)
+elif section == "C":  # 如果选择实心圆柱截面
+    D = float(input("请输入圆柱的直径："))  # 获取圆柱直径
+    E = float(input("请输入材料的弹性模量："))  # 获取弹性模量
+    G = float(input("请输入材料的剪切模量："))  # 获取剪切模量
+    section1 = C(D, E, G)  # 创建实心圆柱截面对象
 
-length = float(input("请输入杆件的长度："))  # 后期将这些特征与pole类的属性联系起来
-maximum_shear_stress = float(input("请输入最大剪应力"))
-Maximum_normal_stress = float(input("请输入最大正应力"))
+length = float(input("请输入杆件的长度："))  # 获取杆件长度
+maximum_shear_stress = float(input("请输入最大剪应力"))  # 获取材料允许的最大剪应力
+Maximum_normal_stress = float(input("请输入最大正应力"))  # 获取材料允许的最大正应力
 
 
-a3 = input("是否有.csv表格(y/n)")
-if a3 == "y":
-    import pandas as pd
+a3 = input("是否有.csv表格(y/n)")  # 询问是否从CSV文件导入力和力矩数据
+if a3 == "y":  # 如果选择从CSV文件导入数据
+    import pandas as pd  # 导入pandas库用于读取CSV文件
 
-    # 假设CSV文件名为forces_and_torques.csv，并且具有以下列：
+    # CSV文件格式说明：
     # type: 力的类型（'force' 或 'torque'）
     # position: 力的作用位置或力矩的作用位置
     # size: 力的大小或力矩的大小
@@ -60,20 +61,23 @@ if a3 == "y":
     # 读取CSV文件
     df = pd.read_csv("D:\\材料力学\\程序\\qixinyi.csv")
 
-    all_the_force = []
-    all_the_force_continued = []
-    all_the_torque = []
+    # 初始化力和力矩的列表
+    all_the_force = []  # 存储集中力
+    all_the_force_continued = []  # 存储分布力
+    all_the_torque = []  # 存储力矩
 
-    # 处理力
-    for index, row in df[df["type"] == "force"].iterrows():
-        position = row["position"]
-        size = row["size"]
-        direction = int(row["direction"])
+    # 处理CSV文件中的力数据
+    for index, row in df[df["type"] == "force"].iterrows():  # 遍历所有类型为force的行
+        position = row["position"]  # 获取力的作用位置
+        size = row["size"]  # 获取力的大小
+        direction = int(row["direction"])  # 获取力的方向
 
-        if pd.isnull(position):  # 如果位置为空，则处理为连续力
-            place_start = float(row["position_start"])
-            place_end = float(row["position_end"])
-            force1 = force_continued(length, place_start, place_end, size, direction)
+        if pd.isnull(position):  # 如果位置为空，则处理为分布力
+            place_start = float(row["position_start"])  # 获取分布力起始位置
+            place_end = float(row["position_end"])  # 获取分布力结束位置
+            force1 = force_continued(
+                length, place_start, place_end, size, direction
+            )  # 创建分布力对象
             if force1.check() == False:
                 print(f"在索引{index}处的力的作用位置超出杆件长度，已跳过")
                 continue
@@ -85,29 +89,29 @@ if a3 == "y":
                 continue
             all_the_force.append(force1)
 
-    # 处理力矩
-    for index, row in df[df["type"] == "torque"].iterrows():
-        place = row["position"]
-        size = row["size"]
-        direction = int(row["direction"])
-        torque1 = torque(length, place, size, direction)
+    # 处理CSV文件中的力矩数据
+    for index, row in df[df["type"] == "torque"].iterrows():  # 遍历所有类型为torque的行
+        place = row["position"]  # 获取力矩作用位置
+        size = row["size"]  # 获取力矩大小
+        direction = int(row["direction"])  # 获取力矩方向
+        torque1 = torque(length, place, size, direction)  # 创建力矩对象
         if torque1.check() == False:
             print(f"在索引{index}处的力矩作用位置超出杆件长度，已跳过")
             continue
         all_the_torque.append(torque1)
 
-else:
-    all_the_force = []
-    all_the_force_continued = []
-    a = "y"
-    while a == "y":
+else:  # 如果选择手动输入数据
+    all_the_force = []  # 初始化集中力列表
+    all_the_force_continued = []  # 初始化分布力列表
+    a = "y"  # 初始化循环控制变量
+    while a == "y":  # 循环输入力的数据
         try:
             place = float(input("请输入力的作用位置（据起始点）(如为连续力输入c)："))
         except:
             place_start = float(input("请输入力的起始位置（据起始点）："))
             place_end = float(input("请输入力的结束位置（据起始点）："))
             size = float(input("请输入力的大小："))
-            direction = input("请输入力的方向：（向上为“1”，向下为“2”）")
+            direction = int(input("请输入力的方向：（向上为“1”，向下为“2”）"))
             force1 = force_continued(length, place_start, place_end, size, direction)
             if force1.check() == False:
                 print("力的作用位置超出杆件长度，请重新输入")
@@ -131,7 +135,7 @@ else:
     while a == "y":
         place = float(input("请输入力矩的作用位置（据起始点）："))
         size = float(input("请输入力矩的大小："))
-        direction = input("请输入力矩的方向：（顺时针为“-1”，逆时针为“1”）")
+        direction = int(input("请输入力矩的方向：（顺时针为“-1”，逆时针为“1”）"))
         torque1 = torque(length, place, size, direction)
         if torque1.check() == False:
             print("力矩的作用位置超出杆件长度，请重新输入")
@@ -181,7 +185,7 @@ while a2 != "n":
 
     elif choice == "6":
         x = float(input("请输入计算点的位置："))
-        answer = shear_stress(all_the_force, x, section1.A, maximum_shear_stress)
+        answer = shear_stress(all_the_force, x, section1.A, maximum_shear_stress, A)
         print(f"在{x}处，该杆件的切应力为{answer}")
 
     elif choice == "7":
