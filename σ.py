@@ -96,3 +96,29 @@ def paint_normal_stress(all_the_force, x, A):
 
     # 显示图形
     plt.show()
+
+
+def Strength_check_de_normal_stress1(all_the_force, x, A, max_stress, t=0):
+    """
+    计算给定截面上某点的正应力，并判断是否超过材料的最大承受应力。
+
+    Args:
+        all_the_force (float): 作用在截面上的总力。
+        x (float): 截面上的点x的坐标。
+        A (float): 截面的面积。
+        max_stress (float): 材料能承受的最大应力。
+        t (float, optional): 默认为0，打印。
+
+    Returns:
+        int: 1表示正应力未超过最大承受应力，0表示正应力超过了最大承受应力。
+
+    """
+
+    normal_stress = normal_stress(all_the_force, x, A, max_stress, 0)
+    if normal_stress > max_stress:
+        a = 0
+    else:
+        a = 1
+    if t == 0 and a == 0:
+        print(f"截面上{x}处的正应力超过了材料的最大承受应力")
+    return a

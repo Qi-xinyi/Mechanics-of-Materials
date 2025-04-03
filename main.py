@@ -8,7 +8,7 @@ from τ import *  # 导入切应力计算相关的函数
 from torsion import *  # 导入扭转相关的函数
 
 section = input(
-    "请输入截面类型:\nHC空心圆柱\nH工型钢\nC圆柱\nother其他\n"
+    "请输入截面类型:\nHC空心圆柱\nH工型钢\nC圆柱\nSP弹簧\nother其他\n"
 )  # 获取用户输入的截面类型
 
 if section == "H":  # 如果选择工型钢截面
@@ -42,6 +42,20 @@ elif section == "C":  # 如果选择实心圆柱截面
     E = float(input("请输入材料的弹性模量："))  # 获取弹性模量
     G = float(input("请输入材料的剪切模量："))  # 获取剪切模量
     section1 = C(D, E, G)  # 创建实心圆柱截面对象
+
+elif section == "SP":  # spring
+    D = float(input("请输入弹簧的直径："))
+    d = float(input("请输入弹簧的丝径："))
+    k = float(input("请输入弹簧的刚度："))
+    F = float(input("请输入弹簧的受力："))
+    shear_stress_max = float(input("请输入最大剪应力"))
+    shear_stress = 8 * k * F * D / (pi * d**3)
+    print(f"弹簧所受的切应力大小为{shear_stress:.2f}")
+    if shear_stress <= shear_stress_max:
+        print("弹簧满足要求")
+    else:
+        print("弹簧不满足要求")
+
 
 length = float(input("请输入杆件的长度："))  # 获取杆件长度
 maximum_shear_stress = float(input("请输入最大剪应力"))  # 获取材料允许的最大剪应力
