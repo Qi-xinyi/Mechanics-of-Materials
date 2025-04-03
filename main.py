@@ -35,7 +35,8 @@ elif section == "other":  # 如果选择其他类型截面
     G = float(input("请输入材料的剪切模量："))  # 获取剪切模量
     I_p = float(input("请输入截面的极惯性矩："))  # 获取极惯性矩
     W_t = float(input("请输入截面的抗扭截面模量："))  # 获取抗扭截面模量
-    sectio1 = other(A, E, G, I_z, W_t, I_p)  # 创建其他类型截面对象
+    y_max = float(input("请输入截面最大y坐标："))
+    section1 = other(A, E, G, I_z, W_t, I_p, y_max)  # 创建其他类型截面对象
 
 elif section == "C":  # 如果选择实心圆柱截面
     D = float(input("请输入圆柱的直径："))  # 获取圆柱直径
@@ -49,7 +50,7 @@ elif section == "SP":  # spring
     k = float(input("请输入弹簧的刚度："))
     F = float(input("请输入弹簧的受力："))
     shear_stress_max = float(input("请输入最大剪应力"))
-    shear_stress = 8 * k * F * D / (pi * d**3)
+    shear_stress1 = 8 * k * F * D / (pi * d**3)
     print(f"弹簧所受的切应力大小为{shear_stress:.2f}")
     if shear_stress <= shear_stress_max:
         print("弹簧满足要求")
@@ -167,15 +168,16 @@ while a2 != "n":
     print("1.检查力平衡")
     print("2.检查力矩平衡")
     print("3.计算正应力（中心）")
-    print("31.计算正应力（非中心）")
+    print("31.计算正应力（非中心且无轴向扭矩）")
     print("32.计算正应力（最大）")
     print("4.画出轴力图")
     print("5.画出正应力图（中心）")
-    print("6.计算切应力")
     print("7.计算弯力")
     print("8.计算弯矩")
     print("9.画弯力图")
     print("10.画弯矩图")
+    print("61.计算切应力(只有弯曲)")
+    print("62.计算切应力(只有扭转)")
     print("11.计算扭矩")
     print("12.画出扭矩图")
 
@@ -251,11 +253,6 @@ while a2 != "n":
     elif choice == "5":
         paint_normal_stress(all_the_force, length, section1.A)
 
-    elif choice == "6":
-        x = float(input("请输入计算点的位置："))
-        answer = shear_stress(all_the_force, x, section1.A, maximum_shear_stress, A)
-        print(f"在{x}处，该杆件的切应力为{answer}")
-
     elif choice == "7":
         x = float(input("请输入计算点的位置："))
         answer = cacular_force_s(all_the_force, all_the_force_continued, x)
@@ -279,6 +276,17 @@ while a2 != "n":
 
     elif choice == "12":
         paint_torsion(all_the_torque, length)
+
+    # elif choice == "61":
+    #     x = float(input("请输入计算点的位置："))
+    #     answer = shear_stress(all_the_force, x, section1.A, maximum_shear_stress, A)
+    #     print(f"在{x}处，该杆件的切应力为{answer}")
+
+    elif choice == "62":
+        x = float(input("请输入计算点的位置："))
+        y = float(input("请输入计算点距几何中心的距离："))
+        answer = shear_stress_torsion(all_the_torque, I_p, x, y)
+        print(f"在{x}处，该杆件的转动惯量为{answer}")
 
     else:
         print("功能未开发")

@@ -4,7 +4,7 @@ import pandas as pd
 
 class section:
     """
-    初始化函数。
+    初始化函数，用于创建截面对象。
 
     Args:
         E (float): 参数E的值。
@@ -20,9 +20,9 @@ class section:
 
 
 class other(section):
-    def __init__(self, A, E, G, I_z, W_t, I_p，y_max):
+    def __init__(self, A, E, G, I_z, W_t, I_p, y_max):
         section.__init__(self, E, G)
-        section.y_max=y_max
+        section.y_max = y_max
         self.A = A
         self.I_z = I_z
         self.W_t = W_t
@@ -77,8 +77,9 @@ class HC(section):
         self.alpha = alpha
 
         self.A = pi * (De**2 - Di**2) / 4
-        
-        self.y_max = De/2  # 圆环截面的最大y坐标值
+
+        self.y_max = De / 2  # 圆环截面的最大y坐标值
+
 
 """
 class pole(section):
@@ -96,7 +97,8 @@ class H(section):
         self.W_z = float(df.loc[num, "W_z"])
         self.W_y = float(df.loc[num, "W_y"])
         self.A = float(df.loc[num, "A"])
-        self.y_max=float(df.loc[num, "h"])/2
+        self.y_max = float(df.loc[num, "h"]) / 2
+
 
 class C(section):
     def __init__(self, D, E, G):
@@ -119,9 +121,9 @@ class Q(section):
         self.I_z = b * h**3 / 12
         self.y_max = max(b, h) / 2
 
+
 class TC(section):  # Thin-walled cylinders
     def __init__(self, D, t, E, G):
         # 调用父类section的构造函数
         section.__init__(self, E, G)
         self.I_p = 2 * pi * D**3 * t / 8
-        
