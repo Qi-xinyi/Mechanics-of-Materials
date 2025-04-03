@@ -1,0 +1,7 @@
+南京理工大学中法工程师学院材料力学作业
+
+qixinyi.csv编辑示意
+type,position,position_start,position_end,size,direction
+force,40,,,150,1    #作用于一个点的力
+force,,0,20,10,2    #连续作用的力
+torque,20,,,4000,1    #扭矩

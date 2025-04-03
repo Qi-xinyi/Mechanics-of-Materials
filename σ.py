@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 
 # σ
-def normal_stress(all_the_force, x, A, max, t=0):
+def normal_stress(all_the_force, x, A, max, t=1):
     """
     计算指定截面上某点的正应力。
 
@@ -29,7 +29,7 @@ def normal_stress(all_the_force, x, A, max, t=0):
             continue
     force_add = force_right - force_left
     σ = force_add / A
-    if t == 0:
+    if t == 1:
         print(f"截面上{x}处的正应力为{σ}")
     return σ
 

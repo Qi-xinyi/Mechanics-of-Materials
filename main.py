@@ -153,6 +153,8 @@ while a2 != "n":
     print("1.检查力平衡")
     print("2.检查力矩平衡")
     print("3.计算正应力（中心）")
+    print("31.计算正应力（非中心）")
+    print("32.计算正应力（最大）")
     print("4.画出轴力图")
     print("5.画出正应力图（中心）")
     print("6.计算切应力")
@@ -173,7 +175,59 @@ while a2 != "n":
 
     elif choice == "3":
         x = float(input("请输入计算点的位置："))
+        try:
+            A = section1.A
+        except:
+            print("未存取截面面积")
+            A = float(input("请输入截面面积："))
         σ = normal_stress(all_the_force, x, section1.A, Maximum_normal_stress)
+        if σ > Maximum_normal_stress:
+            print("截面上{x}处的正应力超过了材料的最大承受应力")
+
+    elif choice == "31":
+        try:
+            A = section1.A
+        except:
+            print("未存取截面面积")
+            A = float(input("请输入截面面积："))
+        try:
+            I_z = section1.I_z
+        except:
+            print("未存取截面惯性矩")
+            I_z = float(input("请输入截面惯性矩："))
+        y = float(input("请输入计算点到中心的距离："))
+        x = float(input("请输入计算点的位置："))
+        σ = (
+            normal_stress(all_the_force, 0, section1.A, Maximum_normal_stress, 0)
+            + torque_s(x, all_the_force, all_the_force_continued, all_the_torque, 0)
+            * y
+            / I_z
+        )
+
+    elif choice == "32":
+        try:
+            A = section1.A
+        except:
+            print("未存取截面面积")
+            A = float(input("请输入截面面积："))
+        try:
+            y_max = section1.y_max
+        except:
+            print("未存取截面最大y坐标")
+            y_max = float(input("请输入截面最大y坐标："))
+        try:
+            I_z = section1.I_z
+        except:
+            print("未存取截面惯性矩")
+            I_z = float(input("请输入截面惯性矩："))
+        y = float(input("请输入计算点到中心的距离："))
+        x = float(input("请输入计算点的位置："))
+        σ = (
+            normal_stress(all_the_force, 0, section1.A, Maximum_normal_stress, 0)
+            + torque_s(x, all_the_force, all_the_force_continued, all_the_torque, 0)
+            * y_max
+            / I_z
+        )
         if σ > Maximum_normal_stress:
             print("截面上{x}处的正应力超过了材料的最大承受应力")
 
