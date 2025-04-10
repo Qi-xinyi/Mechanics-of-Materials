@@ -150,7 +150,9 @@ else:  # 如果选择手动输入数据
     while a == "y":
         place = float(input("请输入力矩的作用位置（据起始点）："))
         size = float(input("请输入力矩的大小："))
-        direction = int(input("请输入力矩的方向：（顺时针为“-1”，逆时针为“1”）"))
+        direction = int(
+            input("请输入力矩的方向：（逆时针为1，顺时针为-1，向上为2，向下为-2）")
+        )
         torque1 = torque(length, place, size, direction)
         if torque1.check() == False:
             print("力矩的作用位置超出杆件长度，请重新输入")

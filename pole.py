@@ -12,7 +12,7 @@ class section:
 
     """
 
-    def __init__(self, E, G):
+    def __init__(self, E, G, type):
         # 初始化属性E
         self.E = E
         # 初始化属性G
@@ -27,6 +27,7 @@ class other(section):
         self.I_z = I_z
         self.W_t = W_t
         self.I_p = I_p
+        self.type = "others"
 
 
 class HC(section):
@@ -54,31 +55,24 @@ class HC(section):
     def __init__(self, De, Di, E, G):
         # 调用父类section的构造函数
         section.__init__(self, E, G)
-
         # 计算内外径比值
         alpha = Di / De
-
         # 计算极惯性矩
         self.I_z = pi * De**4 / 64 * (1 - alpha**4)
-
         # 计算惯性矩
         self.I_p = pi * De**4 / 32 * (1 - alpha**4)
-
         # 计算抗扭截面模量
         self.W_t = pi * De**3 / 16 * (1 - alpha**4)
-
         # 保存外径值
         self.De = De
-
+        self.y_max = De / 2  # 圆环截面的最大y坐标值self
         # 保存内径值
         self.Di = Di
-
+        self.W_z = self.I_z / self.y_max
         # 保存内外径比值
         self.alpha = alpha
-
         self.A = pi * (De**2 - Di**2) / 4
-
-        self.y_max = De / 2  # 圆环截面的最大y坐标值
+        self.type = "HC"
 
 
 """
@@ -98,6 +92,24 @@ class H(section):
         self.W_y = float(df.loc[num, "W_y"])
         self.A = float(df.loc[num, "A"])
         self.y_max = float(df.loc[num, "h"]) / 2
+        h = 2 * self.y_max
+        self.type = "H"
+        self.t = float(df.loc[num, "t"])
+        self.h_0 = h - 2 * t
+        self.b = float(df.loc[num, "b"])
+        self.b_0 = float(df.loc[num, "d"])
+
+    def S_(self, y):
+        a = self.b / 8 * (self.h**2 - self.h_0**2) + self.b_0 / 2 * (
+            self.h_0**2 / 4 - y**2
+        )
+        return a
+
+    def b(self, y):
+        if abs(y) <= self.h / 2:
+            return self.b_0
+        else:
+            return self.b
 
 
 class C(section):
@@ -111,6 +123,8 @@ class C(section):
         self.D = D
         self.A = pi * D**2 / 4
         self.y_max = D / 2
+        self.type = "C"
+        self.W_z = pi * self.D**3 / 32
 
 
 class Q(section):
@@ -119,11 +133,14 @@ class Q(section):
         section.__init__(self, E, G)
         self.A = b * h
         self.I_z = b * h**3 / 12
-        self.y_max = max(b, h) / 2
+        self.y_max = h / 2
+        self.W_z = self.I_z / self.y_max
+        self.type = "Q"
 
 
 class TC(section):  # Thin-walled cylinders
     def __init__(self, D, t, E, G):
-        # 调用父类section的构造函数
+        # 调用父类section的构造函数,
         section.__init__(self, E, G)
         self.I_p = 2 * pi * D**3 * t / 8
+        self.type = "TC"
