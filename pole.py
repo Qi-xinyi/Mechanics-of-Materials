@@ -73,6 +73,12 @@ class HC(section):
         self.alpha = alpha
         self.A = pi * (De**2 - Di**2) / 4
         self.type = "HC"
+        self.S_z = De**2 / 2 - Di**2 / 2
+
+        def b1(self, y):
+            return (
+                ((self.De / 2) ** 2 - y**2) ** 0.5 - (self.Di / 2**2 - y**2) ** 0.5
+            ) * 2
 
 
 """
@@ -125,6 +131,17 @@ class C(section):
         self.y_max = D / 2
         self.type = "C"
         self.W_z = pi * self.D**3 / 32
+        self.S_z = D**2 / 2
+
+        def S_z(self, y):
+            # 计算截面面积的函数
+            if y == 0:
+                return pi * D**3 / 4 / 3 * pi
+            else:
+                print("y不为0，不会")
+
+        def b1(self, y):
+            return (((self.D / 2) ** 2 - y**2) ** 0.5) * 2
 
 
 class Q(section):
@@ -136,6 +153,13 @@ class Q(section):
         self.y_max = h / 2
         self.W_z = self.I_z / self.y_max
         self.type = "Q"
+
+        def S_z(self, y):
+            # 计算截面面积的函数
+            self.S_z = b / 2(h**2 / 4) - y**2
+
+        def b1(self, y):
+            return b
 
 
 class TC(section):  # Thin-walled cylinders

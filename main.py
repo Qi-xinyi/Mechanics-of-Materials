@@ -279,10 +279,10 @@ while a2 != "n":
     elif choice == "12":
         paint_torsion(all_the_torque, length)
 
-    # elif choice == "61":
-    #     x = float(input("请输入计算点的位置："))
-    #     answer = shear_stress(all_the_force, x, section1.A, maximum_shear_stress, A)
-    #     print(f"在{x}处，该杆件的切应力为{answer}")
+    elif choice == "61":
+        x = float(input("请输入计算点的位置："))
+        answer =  shear_stress(all_the_force, y, section1, all_the_force_continued, x):
+        print(f"在{x}处，且距离中心{y}处，该杆件的切应力为{answer}")
 
     elif choice == "62":
         x = float(input("请输入计算点的位置："))
