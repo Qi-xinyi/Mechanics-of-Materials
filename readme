@@ -16,7 +16,7 @@
 特殊：
   如选择了弹簧类型
 
-qixinyi.csv编辑示意
+torque_and_force.csv编辑示意
 type,position,position_start,position_end,size,direction
 force,40,,,150,1    #作用于一个点的力
 force,,0,20,10,2    #连续作用的力
