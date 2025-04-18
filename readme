@@ -20,6 +20,11 @@
   输入弹簧的刚度
   输入弹簧的受力
   计算弹簧所受切应力
+  如果是未知量则填写字母
+  填写允许的最大切应力
+  如果只有丝径未知则根据其他条件计算最小丝径
+  如果只有受力未知则根据其他条件计算最大受力
+  如果全部已知则校验弹簧是否可用
 
 torque_and_force.csv编辑示意
 type,position,position_start,position_end,size,direction
