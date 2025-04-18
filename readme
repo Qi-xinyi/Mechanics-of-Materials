@@ -15,6 +15,11 @@
 
 特殊：
   如选择了弹簧类型
+  输入弹簧的直径
+  输入弹簧的丝径
+  输入弹簧的刚度
+  输入弹簧的受力
+  计算弹簧所受切应力
 
 torque_and_force.csv编辑示意
 type,position,position_start,position_end,size,direction
