@@ -12,7 +12,7 @@ section = input(
 )  # 获取用户输入的截面类型
 
 if section == "H":  # 如果选择工型钢截面
-    num = float(input("请输入工型钢的编号"))  # 获取工型钢编号
+    num = str(input("请输入工型钢的编号"))  # 获取工型钢编号
     E = float(input("请输入材料的弹性模量："))  # 获取弹性模量
     G = float(input("请输入材料的剪切模量："))  # 获取剪切模量
     section1 = H(num, E, G)  # 创建工型钢截面对象
@@ -30,13 +30,9 @@ if section == "HC":  # 如果选择空心圆柱截面
 
 elif section == "other":  # 如果选择其他类型截面
     A = float(input("请输入截面的面积："))  # 获取截面面积
-    I_z = float(input("请输入截面的惯性矩："))  # 获取惯性矩
     E = float(input("请输入材料的弹性模量："))  # 获取弹性模量
     G = float(input("请输入材料的剪切模量："))  # 获取剪切模量
-    I_p = float(input("请输入截面的极惯性矩："))  # 获取极惯性矩
-    W_t = float(input("请输入截面的抗扭截面模量："))  # 获取抗扭截面模量
-    y_max = float(input("请输入截面最大y坐标："))
-    section1 = other(A, E, G, I_z, W_t, I_p, y_max)  # 创建其他类型截面对象
+    section1 = other(A, E, G)  # 创建其他类型截面对象
 
 elif section == "C":  # 如果选择实心圆柱截面
     D = float(input("请输入圆柱的直径："))  # 获取圆柱直径
@@ -172,16 +168,20 @@ while a2 != "n":
     print("3.计算正应力（中心）")
     print("31.计算正应力（非中心且无轴向扭矩）")
     print("32.计算正应力（最大）")
+    print("33.计算正应力（一根杆子上最大的正应力）")
     print("4.画出轴力图")
     print("5.画出正应力图（中心）")
+    print("61.计算切应力(只有弯曲)")
+    print("611.计算最大切应力(只有弯曲)")
+    print("62.计算切应力(只有扭转)")
+    print("621.计算最大切应力(只有扭转)")
     print("7.计算弯力")
     print("8.计算弯矩")
     print("9.画弯力图")
     print("10.画弯矩图")
-    print("61.计算切应力(只有弯曲)")
-    print("62.计算切应力(只有扭转)")
     print("11.计算扭矩")
     print("12.画出扭矩图")
+    print("13.测试")
 
     choice = str(input("请输入你的选择："))
 
@@ -229,25 +229,50 @@ while a2 != "n":
             print("未存取截面面积")
             A = float(input("请输入截面面积："))
         try:
+            W_z = section1.W_z
+        except:
+            print("未存取截面惯性矩")
+            W_z = float(input("请输入截面惯性矩："))
+        x = float(input("请输入计算点的位置："))
+        σ = (
+            normal_stress(all_the_force, 0, section1.A, Maximum_normal_stress, 0)
+            + torque_s(x, all_the_force, all_the_force_continued, all_the_torque, 0)
+            / W_z
+        )
+        if σ > Maximum_normal_stress:
+            print(f"截面上{x}处的正应力的大小为{σ}超过了材料的最大承受应力")
+        else:
+            print(f"截面上{x}处的正应力的大小为{σ}未超过材料的最大承受应力")
+
+    elif choice == "33":
+        try:
+            A = section1.A
+        except:
+            print("未存取截面面积")
+            A = float(input("请输入截面面积："))
+        try:
             y_max = section1.y_max
         except:
             print("未存取截面最大y坐标")
             y_max = float(input("请输入截面最大y坐标："))
         try:
-            I_z = section1.I_z
+            W_z = section1.W_z
         except:
             print("未存取截面惯性矩")
-            I_z = float(input("请输入截面惯性矩："))
-        y = float(input("请输入计算点到中心的距离："))
-        x = float(input("请输入计算点的位置："))
-        σ = (
-            normal_stress(all_the_force, 0, section1.A, Maximum_normal_stress, 0)
-            + torque_s(x, all_the_force, all_the_force_continued, all_the_torque, 0)
-            * y_max
-            / I_z
-        )
-        if σ > Maximum_normal_stress:
-            print("截面上{x}处的正应力超过了材料的最大承受应力")
+            W_z = float(input("请输入截面惯性矩："))
+        σ_max = 0
+        for x in np.arange(0, length, 0.1):
+            σ = (
+                normal_stress(all_the_force, 0, section1.A, Maximum_normal_stress, 0)
+                + torque_s(x, all_the_force, all_the_force_continued, all_the_torque, 0)
+                / W_z
+            )
+            if σ > σ_max:
+                σ_max = σ
+        if σ_max > Maximum_normal_stress:
+            print(f"截面上某处的有最大正应力为{σ_max}超过了材料的最大承受应力")
+        else:
+            print(f"截面上某处的有最大正应力为{σ_max}未超过材料的最大承受应力")
 
     elif choice == "4":
         paint_normal_force(all_the_force, length, section1.A)
@@ -281,14 +306,73 @@ while a2 != "n":
 
     elif choice == "61":
         x = float(input("请输入计算点的位置："))
-        answer =  shear_stress(all_the_force, y, section1, all_the_force_continued, x):
+        answer = shear_stress(all_the_force, y, section1, all_the_force_continued, x)
         print(f"在{x}处，且距离中心{y}处，该杆件的切应力为{answer}")
+
+    elif choice == "611":
+        try:
+            y_max = section1.y_max
+        except:
+            print("未存取截面最大y坐标")
+            y_max = float(input("请输入截面最大y坐标："))
+            τ_max = 0
+        for x in np.arange(0, length, 0.1):
+            τ = shear_stress(all_the_force, y_max, section1, all_the_force_continued, x)
+            if τ > τ_max:
+                τ_max = τ
+        if τ_max > maximum_shear_stress:
+            print(f"截面上某处的有最大切应力为{τ_max}超过了材料的最大承受应力")
+        else:
+            print(f"截面上某处的有最大切应力为{τ_max}未超过材料的最大承受应力")
 
     elif choice == "62":
         x = float(input("请输入计算点的位置："))
         y = float(input("请输入计算点距几何中心的距离："))
         answer = shear_stress_torsion(all_the_torque, I_p, x, y)
         print(f"在{x}处，该杆件的转动惯量为{answer}")
+
+    elif choice == "621":
+        try:
+            y_max = section1.y_max
+        except:
+            print("未存取截面最大y坐标")
+            y_max = float(input("请输入截面最大y坐标："))
+        try:
+            I_p = section1.I_p
+        except:
+            print("未存取截面转动惯量")
+            I_p = float(input("请输入截面转动惯量："))
+        τ_max = 0
+        for x in np.arange(0, length, 0.1):
+            τ = shear_stress_torsion(all_the_torque, I_p, x, y_max)
+            if τ > τ_max:
+                τ_max = τ
+        if τ_max > maximum_shear_stress:
+            print(f"截面上某处的有最大切应力为{τ_max}超过了材料的最大承受应力")
+        else:
+            print(f"截面上某处的有最大切应力为{τ_max}未超过材料的最大承受应力")
+
+    elif choice == "13":
+        try:
+            A = section1.A
+            print(f"A={section1.A}")
+        except:
+            print("未存取截面面积")
+        try:
+            I_z = section1.I_z
+            print(f"I_z={section1.I_z}")
+        except:
+            print("未存取截面惯性矩")
+        try:
+            y_max = section1.y_max
+            print(f"y_max={section1.y_max}")
+        except:
+            print("未存取截面最大y坐标")
+        try:
+            W_z = section1.W_z
+            print(f"W_z={section1.W_z}")
+        except:
+            print("未存取截面重心")
 
     else:
         print("功能未开发")

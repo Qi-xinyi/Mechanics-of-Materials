@@ -12,7 +12,7 @@ class section:
 
     """
 
-    def __init__(self, E, G, type):
+    def __init__(self, E, G):
         # 初始化属性E
         self.E = E
         # 初始化属性G
@@ -20,14 +20,9 @@ class section:
 
 
 class other(section):
-    def __init__(self, A, E, G, I_z, W_t, I_p, y_max):
+    def __init__(self, A, E, G):
         section.__init__(self, E, G)
-        section.y_max = y_max
         self.A = A
-        self.I_z = I_z
-        self.W_t = W_t
-        self.I_p = I_p
-        self.type = "others"
 
 
 class HC(section):
@@ -72,13 +67,19 @@ class HC(section):
         # 保存内外径比值
         self.alpha = alpha
         self.A = pi * (De**2 - Di**2) / 4
-        self.type = "HC"
         self.S_z = De**2 / 2 - Di**2 / 2
 
         def b1(self, y):
             return (
                 ((self.De / 2) ** 2 - y**2) ** 0.5 - (self.Di / 2**2 - y**2) ** 0.5
             ) * 2
+
+        def S_z(self, y):
+            if y == 0:
+                return pi * (self.De**3 - self.Di**3) / 4
+            else:
+                S_z = float(input("请输入S_z的值"))
+                return S_z
 
 
 """
@@ -88,22 +89,41 @@ class pole(section):
 
 
 class H(section):
-    def __init__(self, num, E, G):
-        # 调用父类section的构造函数
+    def __init__(self, num1, E, G):
         section.__init__(self, E, G)
-        df = pd.read_csv("D:\\材料力学\\程序\\H型钢.csv")
-        self.I_z = float(df.loc[num, "I_z"])
-        self.I_y = float(df.loc[num, "I_y"])
-        self.W_z = float(df.loc[num, "W_z"])
-        self.W_y = float(df.loc[num, "W_y"])
-        self.A = float(df.loc[num, "A"])
-        self.y_max = float(df.loc[num, "h"]) / 2
-        h = 2 * self.y_max
-        self.type = "H"
-        self.t = float(df.loc[num, "t"])
-        self.h_0 = h - 2 * t
-        self.b = float(df.loc[num, "b"])
-        self.b_0 = float(df.loc[num, "d"])
+
+        try:
+            CSV_PATH = "D:\\材料力学\\程序\\H型钢.csv"
+            df = pd.read_csv(CSV_PATH)
+            matching_rows = df[df["型号"] == num1]
+
+            if matching_rows.empty:
+                raise ValueError(f"未找到型号为 {num1} 的H型钢数据")
+
+            row = matching_rows.iloc[0]
+
+            # 单位转换常量
+            LENGTH_TO_M = 1e-3
+            AREA_TO_M2 = 1e-4
+            MOMENT_TO_M4 = 1e-8
+            SECTION_MODULUS_TO_M3 = 1e-6
+
+            self.I_z = float(row["I_z"]) * MOMENT_TO_M4
+            self.I_y = float(row["I_y"]) * MOMENT_TO_M4
+            self.W_z = float(row["W_z"]) * SECTION_MODULUS_TO_M3
+            self.W_y = float(row["W_y"]) * SECTION_MODULUS_TO_M3
+            self.A = float(row["A"]) * AREA_TO_M2
+            self.y_max = float(row["h"]) / 2 * LENGTH_TO_M
+            h = 2 * self.y_max
+            self.t = float(row["t"]) * LENGTH_TO_M
+            self.h_0 = h - 2 * self.t
+            self.b = float(row["b"]) * LENGTH_TO_M
+            self.b_0 = float(row["d"]) * LENGTH_TO_M
+
+        except FileNotFoundError:
+            raise FileNotFoundError(f"无法找到H型钢数据文件: {CSV_PATH}")
+        except KeyError as e:
+            raise KeyError(f"CSV文件中缺少必要的列: {e}")
 
     def S_(self, y):
         a = self.b / 8 * (self.h**2 - self.h_0**2) + self.b_0 / 2 * (
@@ -129,14 +149,13 @@ class C(section):
         self.D = D
         self.A = pi * D**2 / 4
         self.y_max = D / 2
-        self.type = "C"
         self.W_z = pi * self.D**3 / 32
         self.S_z = D**2 / 2
 
         def S_z(self, y):
             # 计算截面面积的函数
             if y == 0:
-                return pi * D**3 / 4 / 3 * pi
+                return pi * self.D**3 / 4 / 3 * pi
             else:
                 print("y不为0，不会")
 
@@ -146,20 +165,19 @@ class C(section):
 
 class Q(section):
     def __init__(self, b, h, E, G):
-        # 调用父类section的构造函数
         section.__init__(self, E, G)
+        self.b = b
+        self.h = h
         self.A = b * h
         self.I_z = b * h**3 / 12
         self.y_max = h / 2
         self.W_z = self.I_z / self.y_max
-        self.type = "Q"
 
-        def S_z(self, y):
-            # 计算截面面积的函数
-            self.S_z = b / 2(h**2 / 4) - y**2
+    def S_z(self, y):
+        return self.b / 2 * (self.h**2 - y**2)
 
-        def b1(self, y):
-            return b
+    def b1(self, y):
+        return self.b
 
 
 class TC(section):  # Thin-walled cylinders
@@ -167,4 +185,3 @@ class TC(section):  # Thin-walled cylinders
         # 调用父类section的构造函数,
         section.__init__(self, E, G)
         self.I_p = 2 * pi * D**3 * t / 8
-        self.type = "TC"
