@@ -8,9 +8,16 @@ from τ import *  # 导入切应力计算相关的函数
 from torsion import *  # 导入扭转相关的函数
 
 section = input(
-    "请输入截面类型:\nHC空心圆柱\nH工型钢\nC圆柱\nSP弹簧\nother其他\n"
+    "请输入截面类型:\nHC空心圆柱\nH工型钢\nC圆柱\nSP弹簧\nQ矩形\nother其他\n"
 )  # 获取用户输入的截面类型
 
+if section == "Q":  # 如果选择矩形截面
+    b = float(input("请输入矩形的宽度："))  # 获取矩形宽度
+    h = float(input("请输入矩形的高度："))  # 获取矩形高度
+    E = float(input("请输入材料的弹性模量："))  # 获取弹性模量
+    G = float(input("请输入材料的剪切模量："))  # 获取剪切模量
+    section1 = Q(b, h, E, G)
+    # 创建矩形截面对象
 if section == "H":  # 如果选择工型钢截面
     num = str(input("请输入工型钢的编号"))  # 获取工型钢编号
     E = float(input("请输入材料的弹性模量："))  # 获取弹性模量
@@ -23,10 +30,6 @@ if section == "HC":  # 如果选择空心圆柱截面
     E = float(input("请输入材料的弹性模量："))  # 获取弹性模量
     G = float(input("请输入材料的剪切模量："))  # 获取剪切模量
     section1 = HC(De, Di, E, G)  # 创建空心圆柱截面对象
-    print(f"圆环截面的惯性矩为：{section1.I_z}")
-    print(f"圆环截面的极惯性矩为：{section1.I_p}")
-    print(f"圆环截面的抗扭截面模量为：{section1.W_t}")
-    print(f"圆环截面的面积为：{section1.A}")
 
 elif section == "other":  # 如果选择其他类型截面
     A = float(input("请输入截面的面积："))  # 获取截面面积
@@ -41,17 +44,40 @@ elif section == "C":  # 如果选择实心圆柱截面
     section1 = C(D, E, G)  # 创建实心圆柱截面对象
 
 elif section == "SP":  # spring
-    D = float(input("请输入弹簧的直径："))
-    d = float(input("请输入弹簧的丝径："))
-    k = float(input("请输入弹簧的刚度："))
-    F = float(input("请输入弹簧的受力："))
+    print("请输入弹簧的参数,如果参数为未知量则填写字母")
+    try:
+        D = float(input("请输入弹簧的直径："))
+    except:
+        D = "unknown"
+    try:
+        d = float(input("请输入弹簧的丝径："))
+    except:
+        d = "unknown"
+    try:
+        k = float(input("请输入弹簧的刚度："))
+    except:
+        k = "unknown"
+    try:
+        F = float(input("请输入弹簧的受力："))
+    except:
+        F = "unknown"
     shear_stress_max = float(input("请输入最大剪应力"))
-    shear_stress1 = 8 * k * F * D / (pi * d**3)
-    print(f"弹簧所受的切应力大小为{shear_stress:.2f}")
-    if shear_stress <= shear_stress_max:
-        print("弹簧满足要求")
+    if D != "unknown" and d != "unknown" and k != "unknown" and F != "unknown":
+        shear_stress = 8 * k * F * D / (pi * d**3)
+        print(f"弹簧所受的切应力大小为{shear_stress:.2f}")
+        if shear_stress <= shear_stress_max:
+            print("弹簧满足要求")
+        else:
+            print("弹簧不满足要求，所需最大切应力至少为{shear_stress}")
+    elif F == "unknown" and D != "unknown" and d != "unknown" and k != "unknown":
+        F_max = shear_stress_max * pi * d**3 / (8 * D * k)
+        print(f"弹簧最大可受力为{F_max}")
+    elif d == "unknown":
+        d_mini = 2 * (F * D * k / pi / shear_stress_max) ** (1 / 3)
+        print(f"弹簧最小丝径为{d_mini}")
     else:
-        print("弹簧不满足要求")
+        print("不支持此类运算")
+    exit(0)
 
 
 length = float(input("请输入杆件的长度："))  # 获取杆件长度
@@ -70,7 +96,7 @@ if a3 == "y":  # 如果选择从CSV文件导入数据
     # direction: 力的方向或力矩的方向
 
     # 读取CSV文件
-    df = pd.read_csv("D:\\材料力学\\程序\\qixinyi.csv")
+    df = pd.read_csv("D:\\材料力学\\程序\\force_and_torque.csv")
 
     # 初始化力和力矩的列表
     all_the_force = []  # 存储集中力
