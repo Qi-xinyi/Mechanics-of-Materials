@@ -370,7 +370,7 @@ while a2 != "n":
             I_p = float(input("请输入截面转动惯量："))
         τ_max = 0
         for x in np.arange(0, length, 0.1):
-            τ = shear_stress_torsion(all_the_torque, I_p, x, y_max)
+            τ = shear_stress_torsion(all_the_torque, I_p, x, y_max, 0)
             if τ > τ_max:
                 τ_max = τ
         if τ_max > maximum_shear_stress:

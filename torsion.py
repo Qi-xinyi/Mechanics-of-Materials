@@ -20,7 +20,7 @@ def calcular_torsion(all_the_torique, x):
         if torique1.place < x:
             if torique1.direction == 2:
                 torique_up += torique1.size
-            elif torique1.direction == 1:
+            elif torique1.direction == -2:
                 torique_down += torique1.size
 
     torsion = torique_up - torique_down

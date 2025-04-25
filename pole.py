@@ -142,7 +142,6 @@ class C(section):
     def __init__(self, D, E, G):
         # 调用父类section的构造函数
         section.__init__(self, E, G)
-
         self.I_z = pi * D**4 / 64
         self.I_p = pi * D**4 / 32
         self.W_t = pi * D**3 / 16
@@ -150,14 +149,20 @@ class C(section):
         self.A = pi * D**2 / 4
         self.y_max = D / 2
         self.W_z = pi * self.D**3 / 32
-        self.S_z = D**2 / 2
 
         def S_z(self, y):
-            # 计算截面面积的函数
-            if y == 0:
-                return pi * self.D**3 / 4 / 3 * pi
-            else:
-                print("y不为0，不会")
+            return (
+                (self.D**2 / 8 - y) * (-pi + 2 * asin(y / (self.D / 2)))
+                - y**2 * (y / ((self.D / 2) ** 2 - y**2) ** 0.5)
+                + (self.D**2 / 4 - y**2) * (self.D / 2**2 - y**2) ** 0.5
+            )
+
+        # def S_z(self, y):
+        #     # 计算截面面积的函数
+        #     if y == 0:
+        #         return pi * self.D**3 / 4 / 3 * pi
+        #     else:
+        #         print("y不为0，不会")
 
         def b1(self, y):
             return (((self.D / 2) ** 2 - y**2) ** 0.5) * 2

@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 # σ
@@ -20,7 +21,7 @@ def normal_stress(all_the_force, x, A, max, t=1):
     force_left = 0
     force_right = 0
     for force in all_the_force:
-        if force.place < x:
+        if force.place <= x:
             if force.direction == 3:
                 force_left += force.size
             elif force.direction == 4:
@@ -51,9 +52,9 @@ def paint_normal_force(all_the_force, x, A):
 
     """
     # 生成数据点
-    step = max(1, int(x / 100))
-    x_values = range(0, int(x), step)
-    y_values_A = [normal_stress(all_the_force, place, A, max, 1) for place in x_values]
+    step = x / 1000
+    x_values = np.arange(-step, x + step, step)
+    y_values_A = [normal_stress(all_the_force, place, A, max, 0) for place in x_values]
     y_values = [value * A for value in y_values_A]
 
     # 绘制函数图
@@ -82,9 +83,9 @@ def paint_normal_stress(all_the_force, x, A):
 
     """
     # 生成数据点
-    step = max(1, int(x / 100))
-    x_values = range(0, int(x), step)
-    y_values = [normal_stress(all_the_force, place, A, max, 1) for place in x_values]
+    step = x / 1000
+    x_values = np.arange(-step, x + step, step)
+    y_values = [normal_stress(all_the_force, place, A, max, 0) for place in x_values]
 
     # 绘制函数图
     plt.plot(x_values, y_values)

@@ -1,5 +1,4 @@
 type,position,position_start,position_end,size,direction
-force,,0,15,40000,2
-force,3,,,375000,1
-force,21,,,225000,1
-torque,21,,,1350000,-1
+force,0,,,110,3
+force,5,,,210,4
+force,10,,,100,3
