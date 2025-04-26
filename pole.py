@@ -93,7 +93,7 @@ class H(section):
         section.__init__(self, E, G)
 
         try:
-            CSV_PATH = "D:\\材料力学\\程序\\H型钢.csv"
+            CSV_PATH = "H型钢.csv"
             df = pd.read_csv(CSV_PATH)
             matching_rows = df[df["型号"] == num1]
 

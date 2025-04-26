@@ -31,7 +31,7 @@ def shear_stress_torsion(all_the_torque, I_p, x, y, a=1):
     return τ
 
 
-def shear_stress(all_the_force, y, section1all_the_force, all_the_force_continued, x):
+def shear_stress(all_the_force, y, section1, all_the_force_continued, x):
     try:
         S_z = S_z(y)
     except:
