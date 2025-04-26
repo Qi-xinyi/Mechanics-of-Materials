@@ -96,7 +96,7 @@ if a3 == "y":  # 如果选择从CSV文件导入数据
     # direction: 力的方向或力矩的方向
 
     # 读取CSV文件
-    df = pd.read_csv("D:\\材料力学\\程序\\force_and_torque.csv")
+    df = pd.read_csv("force_and_torque.csv")
 
     # 初始化力和力矩的列表
     all_the_force = []  # 存储集中力
